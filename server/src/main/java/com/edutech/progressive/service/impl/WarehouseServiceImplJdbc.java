@@ -17,17 +17,17 @@ public class WarehouseServiceImplJdbc implements WarehouseService {
     }
 
     @Override
-    public List<Warehouse> getAllWarehouses() {
+    public List<Warehouse> getAllWarehouses() throws SQLException{
         return warehouseDAO.getAllWarehouse();
     }
 
     @Override
-    public int addWarehouse(Warehouse warehouse) {
+    public int addWarehouse(Warehouse warehouse)throws SQLException {
         return warehouseDAO.addWarehouse(warehouse);
     }
 
     @Override
-    public List<Warehouse> getWarehousesSortedByCapacity() {
+    public List<Warehouse> getWarehousesSortedByCapacity() throws SQLException{
         List<Warehouse> sortWarehouses;
         sortWarehouses = warehouseDAO.getAllWarehouse();
         Collections.sort(sortWarehouses, Comparator.comparing(Warehouse::getCapacity));
@@ -35,22 +35,22 @@ public class WarehouseServiceImplJdbc implements WarehouseService {
     }
 
     @Override
-    public void updateWarehouse(Warehouse warehouse) {
+    public void updateWarehouse(Warehouse warehouse)throws SQLException {
         warehouseDAO.updateWarehouse(warehouse);
     }
 
     @Override
-    public void deleteWarehouse(int warehouseId) {
+    public void deleteWarehouse(int warehouseId) throws SQLException{
         warehouseDAO.deleteWarehouse(warehouseId);
     }
 
     @Override
-    public Warehouse getWarehouseById(int warehouseId) {
+    public Warehouse getWarehouseById(int warehouseId)throws SQLException {
         return warehouseDAO.getWarehouseById(warehouseId);
     }
 
     @Override
-    public List<Warehouse> getWarehouseBySupplier(int supplierId) {
+    public List<Warehouse> getWarehouseBySupplier(int supplierId) throws SQLException{
         return null;
     }
 }

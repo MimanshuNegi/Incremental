@@ -1,5 +1,6 @@
 package com.edutech.progressive.service.impl;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import com.edutech.progressive.dao.ProductDAO;
@@ -14,27 +15,27 @@ public class ProductServiceImplJdbc implements ProductService{
     }
 
     @Override
-    public int addProduct(Product product) {
+    public int addProduct(Product product)throws SQLException {
         return productDAO.addProduct(product);
     }
 
     @Override
-    public Product getProductById(int productId) {
+    public Product getProductById(int productId) throws SQLException{
         return productDAO.getProductById(productId);
     }
 
     @Override
-    public void updateProduct(Product product) {
+    public void updateProduct(Product product)throws SQLException {
         productDAO.updateProduct(product);
     }
 
     @Override
-    public void deleteProduct(int productId) {
+    public void deleteProduct(int productId) throws SQLException{
         productDAO.deleteProduct(productId);
     }
 
     @Override
-    public List<Product> getAllProducts() {
+    public List<Product> getAllProducts()throws SQLException {
         return productDAO.getAllProducts();
     }
 }

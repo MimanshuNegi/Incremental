@@ -1,8 +1,8 @@
 package com.edutech.progressive.entity;
 
 public class Warehouse implements Comparable<Warehouse>{
-    private int warehouseld;
-    private int supplierld;
+    private int warehouseId;
+    private int supplierId;
     private String warehouseName;
     private String location;
     private int capacity;
@@ -12,29 +12,29 @@ public class Warehouse implements Comparable<Warehouse>{
     }
 
     // Parameterized Constructor
-    public Warehouse(int warehouseld, int supplierld, String warehouseName, String location, int capacity) {
-        this.warehouseld = warehouseld;
-        this.supplierld = supplierld;
+    public Warehouse(int warehouseId, int supplierId, String warehouseName, String location, int capacity) {
+        this.warehouseId = warehouseId;
+        this.supplierId = supplierId;
         this.warehouseName = warehouseName;
         this.location = location;
         this.capacity = capacity;
     }
 
     // Getters and setters
-    public int getWarehouseld() {
-        return warehouseld;
+    public int getWarehouseId() {
+        return warehouseId;
     }
 
-    public void setWarehouseld(int warehouseld) {
-        this.warehouseld = warehouseld;
+    public void setWarehouseId(int warehouseId) {
+        this.warehouseId = warehouseId;
     }
 
-    public int getSupplierld() {
-        return supplierld;
+    public int getSupplierId() {
+        return supplierId;
     }
 
-    public void setSupplierld(int supplierld) {
-        this.supplierld = supplierld;
+    public void setSupplierId(int supplierId) {
+        this.supplierId = supplierId;
     }
 
     public String getWarehouseName() {

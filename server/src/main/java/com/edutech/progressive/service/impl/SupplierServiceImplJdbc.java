@@ -18,34 +18,34 @@ public class SupplierServiceImplJdbc implements SupplierService {
     }
 
     @Override
-    public List<Supplier> getAllSuppliers() {
+    public List<Supplier> getAllSuppliers()throws SQLException {
         return supplierDAO.getAllSuppliers();
     }
 
     @Override
-    public int addSupplier(Supplier supplier) {
+    public int addSupplier(Supplier supplier)throws SQLException {
         return supplierDAO.addSupplier(supplier);
     }
 
     @Override
-    public List<Supplier> getAllSuppliersSortedByName() {
+    public List<Supplier> getAllSuppliersSortedByName()throws SQLException {
         List<Supplier> suppliers = supplierDAO.getAllSuppliers();
         Collections.sort(suppliers, Comparator.comparing(Supplier::getSupplierName));
         return suppliers;
     }
 
     @Override
-    public void updateSupplier(Supplier supplier) {
+    public void updateSupplier(Supplier supplier) throws SQLException{
         supplierDAO.updateSupplier(supplier);
     }
 
     @Override
-    public void deleteSupplier(int supplierId) {
+    public void deleteSupplier(int supplierId)throws SQLException {
         supplierDAO.deleteSupplier(supplierId);
     }
 
     @Override
-    public Supplier getSupplierById(int supplierId) {
+    public Supplier getSupplierById(int supplierId) throws SQLException{
         return supplierDAO.getSupplierById(supplierId);
     }
 

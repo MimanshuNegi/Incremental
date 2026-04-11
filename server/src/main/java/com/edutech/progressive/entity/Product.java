@@ -1,8 +1,8 @@
 package com.edutech.progressive.entity;
 
 public class Product {
-    private int productld;
-    private int warehouseld;
+    private int productId;
+    private int warehouseId;
     private String productName;
     private String productDescription;
     private int quantity;
@@ -10,27 +10,27 @@ public class Product {
     //Default Constructor
     public Product() {}
     //Parameterized Constructor
-    public Product(int productld, int warehouseld, String productName, String productDescription, int quantity,
+    public Product(int productId, int warehouseId, String productName, String productDescription, int quantity,
             Long price) {
-        this.productld = productld;
-        this.warehouseld = warehouseld;
+        this.productId = productId;
+        this.warehouseId = warehouseId;
         this.productName = productName;
         this.productDescription = productDescription;
         this.quantity = quantity;
         this.price = price;
     }
     //Getters and setters
-    public int getProductld() {
-        return productld;
+    public int getProductId() {
+        return productId;
     }
-    public void setProductld(int productld) {
-        this.productld = productld;
+    public void setProductId(int productId) {
+        this.productId = productId;
     }
-    public int getWarehouseld() {
-        return warehouseld;
+    public int getWarehouseId() {
+        return warehouseId;
     }
-    public void setWarehouseld(int warehouseld) {
-        this.warehouseld = warehouseld;
+    public void setWarehouseId(int warehouseId) {
+        this.warehouseId = warehouseId;
     }
     public String getProductName() {
         return productName;

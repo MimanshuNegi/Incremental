@@ -1,7 +1,7 @@
 package com.edutech.progressive.entity;
 
 public class Supplier implements Comparable<Supplier>{
-    private int supplierld;
+    private int supplierId;
     private String supplierName;
     private String email;
     private String phone;
@@ -13,9 +13,9 @@ public class Supplier implements Comparable<Supplier>{
     public Supplier() {
     }
     //Parameterized Constructor
-    public Supplier(int supplierld, String supplierName, String email, String phone, String address, String username,
+    public Supplier(int supplierId, String supplierName, String email, String phone, String address, String username,
             String password, String role) {
-        this.supplierld = supplierld;
+        this.supplierId = supplierId;
         this.supplierName = supplierName;
         this.email = email;
         this.phone = phone;
@@ -25,11 +25,11 @@ public class Supplier implements Comparable<Supplier>{
         this.role = role;
     }
     // Getters and setters
-    public int getSupplierld() {
-        return supplierld;
+    public int getSupplierId() {
+        return supplierId;
     }
-    public void setSupplierld(int supplierld) {
-        this.supplierld = supplierld;
+    public void setSupplierId(int supplierId) {
+        this.supplierId = supplierId;
     }
     public String getSupplierName() {
         return supplierName;
