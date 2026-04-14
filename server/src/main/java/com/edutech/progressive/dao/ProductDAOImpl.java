@@ -13,14 +13,15 @@ import com.edutech.progressive.config.DatabaseConnectionManager;
 import com.edutech.progressive.entity.Product;
 
 public class ProductDAOImpl implements ProductDAO {
+
     @Override
     public int addProduct(Product product) throws SQLException {
         String sql = "INSERT INTO product (warehouse_id, product_name, product_description, quantity, price) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection connection = DatabaseConnectionManager.getConnection();
-                PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-            ps.setInt(1, product.getWarehouseId());
+            ps.setInt(1, product.getWarehouse().getWarehouseId());
             ps.setString(2, product.getProductName());
             ps.setString(3, product.getProductDescription());
             ps.setInt(4, product.getQuantity());
@@ -50,7 +51,7 @@ public class ProductDAOImpl implements ProductDAO {
         String sql = "SELECT * FROM product WHERE product_id = ?";
 
         try (Connection connection = DatabaseConnectionManager.getConnection();
-                PreparedStatement ps = connection.prepareStatement(sql)) {
+             PreparedStatement ps = connection.prepareStatement(sql)) {
 
             ps.setInt(1, productId);
 
@@ -58,7 +59,7 @@ public class ProductDAOImpl implements ProductDAO {
                 if (rs.next()) {
                     Product product = new Product();
                     product.setProductId(rs.getInt("product_id"));
-                    product.setWarehouseId(rs.getInt("warehouse_id"));
+                    product.getWarehouse().setWarehouseId(rs.getInt("warehouse_id"));
                     product.setProductName(rs.getString("product_name"));
                     product.setProductDescription(rs.getString("product_description"));
                     product.setQuantity(rs.getInt("quantity"));
@@ -76,9 +77,9 @@ public class ProductDAOImpl implements ProductDAO {
         String sql = "UPDATE product SET warehouse_id = ?, product_name = ?, product_description = ?, quantity = ?, price = ? WHERE product_id = ?";
 
         try (Connection connection = DatabaseConnectionManager.getConnection();
-                PreparedStatement ps = connection.prepareStatement(sql)) {
+             PreparedStatement ps = connection.prepareStatement(sql)) {
 
-            ps.setInt(1, product.getWarehouseId());
+            ps.setInt(1, product.getWarehouse().getWarehouseId());
             ps.setString(2, product.getProductName());
             ps.setString(3, product.getProductDescription());
             ps.setInt(4, product.getQuantity());
@@ -90,11 +91,11 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
-    public void deleteProduct(int productId)throws SQLException{
+    public void deleteProduct(int productId) throws SQLException {
         String sql = "DELETE FROM product WHERE product_id = ?";
 
         try (Connection connection = DatabaseConnectionManager.getConnection();
-                PreparedStatement ps = connection.prepareStatement(sql)) {
+             PreparedStatement ps = connection.prepareStatement(sql)) {
 
             ps.setInt(1, productId);
             ps.executeUpdate();
@@ -102,7 +103,7 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
-    public List<Product> getAllProducts()throws SQLException {
+    public List<Product> getAllProducts() throws SQLException {
         String sql = "SELECT * FROM product";
         List<Product> products = new ArrayList<>();
 
@@ -113,7 +114,7 @@ public class ProductDAOImpl implements ProductDAO {
             while (rs.next()) {
                 Product product = new Product();
                 product.setProductId(rs.getInt("product_id"));
-                product.setWarehouseId(rs.getInt("warehouse_id"));
+                product.getWarehouse().setWarehouseId(rs.getInt("warehouse_id"));
                 product.setProductName(rs.getString("product_name"));
                 product.setProductDescription(rs.getString("product_description"));
                 product.setQuantity(rs.getInt("quantity"));
@@ -122,7 +123,7 @@ public class ProductDAOImpl implements ProductDAO {
                 products.add(product);
             }
         }
+
         return products;
     }
-
 }
