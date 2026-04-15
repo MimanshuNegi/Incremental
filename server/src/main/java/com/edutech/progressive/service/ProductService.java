@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ProductService {
 
-    List<Product> getAllProducts()throws SQLException;
+    List<Product> getAllProducts() throws SQLException;
 
     Product getProductById(int productId)throws SQLException;
 
@@ -18,7 +18,7 @@ public interface ProductService {
     void deleteProduct(int productId)throws SQLException;
 
     //Do not implement these methods in ProductServiceImplJdbc.java class
-    default List<Product> getAllProductByWarehouse(int warehouseId) {
+    default List<Product> getAllProductByWarehouse(int warehouseId) throws SQLException{
         return null;
     }
 }
