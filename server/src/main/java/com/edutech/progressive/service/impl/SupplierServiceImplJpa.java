@@ -16,7 +16,9 @@ import com.edutech.progressive.service.SupplierService;
 @Service
 public class SupplierServiceImplJpa  implements SupplierService{
 
+    
     private SupplierRepository supplierRepository;
+
     
     @Autowired
     public SupplierServiceImplJpa(SupplierRepository supplierRepository) {
