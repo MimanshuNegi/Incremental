@@ -9,36 +9,51 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class WarehouseComponent implements OnInit {
   warehouseForm!: FormGroup;
   submitted = false;
+  backendError: string | null = null;
+  successMessage: string | null = null;
 
   constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.warehouseForm = this.fb.group({
-      warehouseId: ['', Validators.required],
-      supplierId: ['', [Validators.required, Validators.min(1)]],
+      supplierId: ['', Validators.required],
       warehouseName: ['', Validators.required],
-      location: ['', Validators.required],
+      location: [''],
       capacity: ['', [Validators.required, Validators.min(0)]]
     });
   }
 
-  // convenience getter for easy access in template
+  // convenience getter
   get f() {
     return this.warehouseForm.controls;
   }
 
   onSubmit(): void {
     this.submitted = true;
+    this.backendError = null;
+    this.successMessage = null;
 
     if (this.warehouseForm.invalid) {
       return;
     }
 
-    // Placeholder for actual submission logic
-    console.log('Warehouse form submitted:', this.warehouseForm.value);
+    const formData = this.warehouseForm.value;
 
-    // Reset form after submission
+    if (this.simulateBackendError(formData.warehouseName)) {
+      this.backendError = 'Warehouse name already exists. Please choose another.';
+      return;
+    }
+
+    // Success
+    this.successMessage = 'Warehouse registered successfully!';
+    console.log('Warehouse form submitted:', formData);
+
     this.warehouseForm.reset();
     this.submitted = false;
+  }
+
+  simulateBackendError(warehouseName: string): boolean {
+    const existingWarehouses = ['Central Depot', 'Main Storage'];
+    return existingWarehouses.includes(warehouseName);
   }
 }

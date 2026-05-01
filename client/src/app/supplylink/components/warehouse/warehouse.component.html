@@ -1,23 +1,14 @@
 <div class="warehouse-container">
-  <h2>Warehouse Management</h2>
+  <h2>Warehouse Registration</h2>
 
   <form [formGroup]="warehouseForm" (ngSubmit)="onSubmit()">
-
-    <!-- Warehouse ID -->
-    <div class="form-group">
-      <label>Warehouse ID:</label>
-      <input type="text" formControlName="warehouseId" placeholder="Enter Warehouse ID">
-      <div *ngIf="submitted && warehouseForm.controls['warehouseId'].errors" class="error">
-        <small *ngIf="warehouseForm.controls['warehouseId'].errors?.['required']">Warehouse ID is required</small>
-      </div>
-    </div>
 
     <!-- Supplier ID -->
     <div class="form-group">
       <label>Supplier ID:</label>
       <input type="text" formControlName="supplierId" placeholder="Enter Supplier ID">
-      <div *ngIf="submitted && warehouseForm.controls['supplierId'].errors" class="error">
-        <small *ngIf="warehouseForm.controls['supplierId'].errors?.['required']">Supplier ID is required</small>
+      <div *ngIf="submitted && f['supplierId'].errors" class="error">
+        <small *ngIf="f['supplierId'].errors?.['required']">Supplier ID is required</small>
       </div>
     </div>
 
@@ -25,8 +16,8 @@
     <div class="form-group">
       <label>Warehouse Name:</label>
       <input type="text" formControlName="warehouseName" placeholder="Enter Warehouse Name">
-      <div *ngIf="submitted && warehouseForm.controls['warehouseName'].errors" class="error">
-        <small *ngIf="warehouseForm.controls['warehouseName'].errors?.['required']">Warehouse Name is required</small>
+      <div *ngIf="submitted && f['warehouseName'].errors" class="error">
+        <small *ngIf="f['warehouseName'].errors?.['required']">Warehouse Name is required</small>
       </div>
     </div>
 
@@ -34,21 +25,28 @@
     <div class="form-group">
       <label>Location:</label>
       <input type="text" formControlName="location" placeholder="Enter Location">
-      <div *ngIf="submitted && warehouseForm.controls['location'].errors" class="error">
-        <small *ngIf="warehouseForm.controls['location'].errors?.['required']">Location is required</small>
-      </div>
     </div>
 
     <!-- Capacity -->
     <div class="form-group">
       <label>Capacity:</label>
       <input type="number" formControlName="capacity" placeholder="Enter Capacity">
-      <div *ngIf="submitted && warehouseForm.controls['capacity'].errors" class="error">
-        <small *ngIf="warehouseForm.controls['capacity'].errors?.['required']">Capacity is required</small>
-        <small *ngIf="warehouseForm.controls['capacity'].errors?.['min']">Capacity must be greater than 0</small>
+      <div *ngIf="submitted && f['capacity'].errors" class="error">
+        <small *ngIf="f['capacity'].errors?.['required']">Capacity is required</small>
+        <small *ngIf="f['capacity'].errors?.['min']">Capacity must be non‑negative</small>
       </div>
     </div>
 
-    <button type="submit">Submit</button>
+    <button type="submit">Register Warehouse</button>
   </form>
+
+  <!-- Backend error message -->
+  <div *ngIf="backendError" class="error">
+    {{ backendError }}
+  </div>
+
+  <!-- Success message -->
+  <div *ngIf="successMessage" class="success">
+    {{ successMessage }}
+  </div>
 </div>

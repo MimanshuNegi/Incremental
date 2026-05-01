@@ -1,43 +1,81 @@
-<form [formGroup]="supplierForm" (ngSubmit)="onSubmit()" class="supplier-form">
-  <div>
-    <label for="name">Name</label>
-    <input id="name" formControlName="name" />
-    <span *ngIf="supplierForm.get('name')?.touched && supplierForm.get('name')?.invalid">
-      Name is required
-    </span>
+<div class="supplier-container">
+  <h2>Supplier Registration</h2>
+
+  <form [formGroup]="supplierForm" (ngSubmit)="onSubmit()">
+
+    <!-- Supplier Name -->
+    <div class="form-group">
+      <label>Supplier Name:</label>
+      <input type="text" formControlName="supplierName" placeholder="Enter Supplier Name">
+      <div *ngIf="submitted && f['supplierName'].errors" class="error">
+        <small *ngIf="f['supplierName'].errors?.['required']">Supplier Name is required</small>
+        <small *ngIf="f['supplierName'].errors?.['pattern']">No special characters allowed</small>
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div class="form-group">
+      <label>Email:</label>
+      <input type="email" formControlName="email" placeholder="Enter Email">
+      <div *ngIf="submitted && f['email'].errors" class="error">
+        <small *ngIf="f['email'].errors?.['required']">Email is required</small>
+        <small *ngIf="f['email'].errors?.['email']">Invalid email address</small>
+      </div>
+    </div>
+
+    <!-- Phone -->
+    <div class="form-group">
+      <label>Phone:</label>
+      <input type="text" formControlName="phone" placeholder="Enter Phone Number">
+    </div>
+
+    <!-- Address -->
+    <div class="form-group">
+      <label>Address:</label>
+      <input type="text" formControlName="address" placeholder="Enter Address">
+    </div>
+
+    <!-- Username -->
+    <div class="form-group">
+      <label>Username:</label>
+      <input type="text" formControlName="username" placeholder="Enter Username">
+      <div *ngIf="submitted && f['username'].errors" class="error">
+        <small *ngIf="f['username'].errors?.['required']">Username is required</small>
+        <small *ngIf="f['username'].errors?.['noSpecialCharacters']">No special characters allowed</small>
+      </div>
+    </div>
+
+    <!-- Password -->
+    <div class="form-group">
+      <label>Password:</label>
+      <input type="password" formControlName="password" placeholder="Enter Password">
+      <div *ngIf="submitted && f['password'].errors" class="error">
+        <small *ngIf="f['password'].errors?.['required']">Password is required</small>
+        <small *ngIf="f['password'].errors?.['pattern']">
+          Password must be at least 8 characters, include one uppercase letter and one number
+        </small>
+      </div>
+    </div>
+
+    <!-- Role -->
+    <div class="form-group">
+      <label>Role:</label>
+      <input type="text" formControlName="role" placeholder="Enter Role">
+      <div *ngIf="submitted && f['role'].errors" class="error">
+        <small *ngIf="f['role'].errors?.['required']">Role is required</small>
+      </div>
+    </div>
+
+    <button type="submit">Register Supplier</button>
+  </form>
+
+  <!-- Backend error message -->
+  <div *ngIf="backendError" class="error">
+    {{ backendError }}
   </div>
 
-  <div>
-    <label for="email">Email</label>
-    <input id="email" formControlName="email" />
-    <span *ngIf="supplierForm.get('email')?.touched && supplierForm.get('email')?.invalid">
-      Valid email is required
-    </span>
+  <!-- Success message -->
+  <div *ngIf="successMessage" class="success">
+    {{ successMessage }}
   </div>
-
-  <div>
-    <label for="username">Username</label>
-    <input id="username" formControlName="username" />
-    <span *ngIf="supplierForm.get('username')?.touched && supplierForm.get('username')?.invalid">
-      Username is required
-    </span>
-  </div>
-
-  <div>
-    <label for="password">Password</label>
-    <input id="password" type="password" formControlName="password" />
-    <span *ngIf="supplierForm.get('password')?.touched && supplierForm.get('password')?.invalid">
-      Password is required
-    </span>
-  </div>
-
-  <button type="submit" [disabled]="supplierForm.invalid">Submit</button>
-</form>
-
-<!-- Success/Error messages -->
-<div *ngIf="supplierSuccess$ | async" class="success-message">
-  Supplier created successfully!
-</div>
-<div *ngIf="supplierError$ | async" class="error-message">
-  Please fill out all required fields correctly.
 </div>
