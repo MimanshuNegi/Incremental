@@ -1,0 +1,61 @@
+<div class="product-container">
+  <h2>Product Management</h2>
+
+  <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+
+    <!-- Product ID -->
+    <div class="form-group">
+      <label>Product ID:</label>
+      <input type="text" formControlName="productId" placeholder="Enter Product ID">
+      <div *ngIf="submitted && productForm.controls['productId'].errors" class="error">
+        <small *ngIf="productForm.controls['productId'].errors?.['required']">Product ID is required</small>
+      </div>
+    </div>
+
+    <!-- Warehouse ID -->
+    <div class="form-group">
+      <label>Warehouse ID:</label>
+      <input type="text" formControlName="warehouseId" placeholder="Enter Warehouse ID">
+      <div *ngIf="submitted && productForm.controls['warehouseId'].errors" class="error">
+        <small *ngIf="productForm.controls['warehouseId'].errors?.['required']">Warehouse ID is required</small>
+      </div>
+    </div>
+
+    <!-- Product Name -->
+    <div class="form-group">
+      <label>Product Name:</label>
+      <input type="text" formControlName="productName" placeholder="Enter Product Name">
+      <div *ngIf="submitted && productForm.controls['productName'].errors" class="error">
+        <small *ngIf="productForm.controls['productName'].errors?.['required']">Product Name is required</small>
+      </div>
+    </div>
+
+    <!-- Product Description -->
+    <div class="form-group">
+      <label>Product Description:</label>
+      <textarea formControlName="productDescription" placeholder="Enter Product Description"></textarea>
+    </div>
+
+    <!-- Quantity -->
+    <div class="form-group">
+      <label>Quantity:</label>
+      <input type="number" formControlName="quantity" placeholder="Enter Quantity">
+      <div *ngIf="submitted && productForm.controls['quantity'].errors" class="error">
+        <small *ngIf="productForm.controls['quantity'].errors?.['required']">Quantity is required</small>
+        <small *ngIf="productForm.controls['quantity'].errors?.['min']">Quantity must be greater than 0</small>
+      </div>
+    </div>
+
+    <!-- Price -->
+    <div class="form-group">
+      <label>Price:</label>
+      <input type="number" formControlName="price" placeholder="Enter Price">
+      <div *ngIf="submitted && productForm.controls['price'].errors" class="error">
+        <small *ngIf="productForm.controls['price'].errors?.['required']">Price is required</small>
+        <small *ngIf="productForm.controls['price'].errors?.['min']">Price must be non-negative</small>
+      </div>
+    </div>
+
+    <button type="submit" [disabled]="productForm.invalid">Submit</button>
+  </form>
+</div>
