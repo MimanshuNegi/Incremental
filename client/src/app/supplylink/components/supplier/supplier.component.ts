@@ -1,64 +1,73 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { Supplier } from '../../types/Supplier';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { of } from 'rxjs';
+import { SupplyLinkService } from '../../services/supplylink.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-supplier',
   templateUrl: './supplier.component.html',
-  styleUrls: ['./supplier.component.scss']
+  styleUrls: ['./supplier.component.scss'],
 })
 export class SupplierComponent implements OnInit {
-  supplierForm!: FormGroup;
-  submitted = false;
-  backendError: string | null = null;
   successMessage: string | null = null;
+  errorMessage: string | null = null;
+  supplierForm!: FormGroup;
+  supplier: Supplier | null = null;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private formBuilder: FormBuilder,
+    private supplyLinkService: SupplyLinkService
+  ) {}
 
   ngOnInit(): void {
-    this.supplierForm = this.fb.group({
-      supplierName: ['', [Validators.required, Validators.pattern(/^[A-Za-z ]+$/)]],
-      email: ['', [Validators.required, Validators.email]],
-      phone: [''],
-      address: [''],
-      username: ['', [Validators.required, this.noSpecialCharacters]],
-      password: ['', [
-        Validators.required,
-        Validators.pattern(/^(?=.*[A-Z])(?=.*\d).{8,}$/)
-      ]],
-      role: ['', Validators.required]
+    this.supplierForm = this.formBuilder.group({
+      supplierName: ["", [Validators.required]],
+      email: ["", [Validators.required, Validators.email]],
+      phone: [""],
+      address: [""],
+      username: ["", [Validators.required, this.noSpecialCharacters]],
+      password: ["", [Validators.required, Validators.minLength(8)]],
+      role: ["", [Validators.required]]
     });
   }
 
-  get f() {
-    return this.supplierForm.controls;
-  }
-
-  noSpecialCharacters(control: AbstractControl): ValidationErrors | null {
-    const value = control.value;
-    if (!value) return null;
-    const regex = /^[A-Za-z0-9]+$/; // only letters and numbers allowed
-    return regex.test(value) ? null : { noSpecialCharacters: true };
+  private noSpecialCharacters(control: any): { [key: string]: boolean } | null {
+    const SPECIAL_CHARACTERS_REGEX = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/;
+    if (SPECIAL_CHARACTERS_REGEX.test(control.value)) {
+      return { specialCharacters: true };
+    }
+    return null;
   }
 
   onSubmit(): void {
-    this.submitted = true;
-    this.backendError = null;
+    if (this.supplierForm.valid) {
+      this.supplyLinkService.addSupplier(this.supplierForm.value).subscribe({
+        next: (response) => {
+          this.supplier = response;
+          this.successMessage = 'Supplier created successfully';
+          this.errorMessage = null;
+          this.supplierForm.reset();
+        },
+        error: (error) => this.handleError(error)
+      });
+    } else {
+      this.errorMessage = 'Please fill out all required fields correctly.';
+      this.successMessage = null;
+    }
+  }
+
+  private handleError(error: HttpErrorResponse): void {
+    if (error.error instanceof ErrorEvent) {
+      this.errorMessage = `Client-side error: ${error.error.message}`;
+    } else {
+      this.errorMessage = `Server-side error: ${error.status} ${error.message}`;
+      if (error.status === 400) {
+        this.errorMessage = 'Bad request. Please check your input.';
+      }
+    }
     this.successMessage = null;
-
-    if (this.supplierForm.invalid) {
-      return;
-    }
-
-    const formData = this.supplierForm.value;
-    if (formData.username === 'existingUser') {
-      this.backendError = 'Username already exists. Please choose another.';
-      return;
-    }
-
-    this.successMessage = 'Supplier registered successfully!';
-    console.log('Supplier form submitted:', formData);
-
-    this.supplierForm.reset();
-    this.submitted = false;
+    console.error('An error occurred:', this.errorMessage);
   }
 }
