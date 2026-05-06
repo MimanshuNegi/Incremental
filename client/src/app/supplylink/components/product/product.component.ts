@@ -1,64 +1,56 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-interface Product {
-  productId: string;
-  warehouseId: number;
-  productName: string;
-  productDescription: string;
-  quantity: number;
-  price: number;
-}
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Product } from '../../types/Product';
+import { Warehouse } from '../../types/Warehouse';
+import { Observable, of } from 'rxjs';
+import { SupplyLinkService } from '../../services/supplylink.service';
 
 @Component({
-  selector: 'app-product',
-  templateUrl: './product.component.html',
-  styleUrls: ['./product.component.scss']
+    selector: 'app-product',
+    templateUrl: './product.component.html',
+    styleUrls: ['./product.component.scss']
 })
 export class ProductComponent implements OnInit {
-  productForm!: FormGroup;
-  submitted = false;
+    productForm!: FormGroup;
+    warehouses!: Observable<Warehouse[]>;
+    productError: Observable<string> = of('');
+    productSuccess: Observable<string> = of('');
+    isFormSubmitted: boolean = false;
+    userId!: number;
 
-  constructor(private fb: FormBuilder) {}
+    constructor(
+        private formBuilder: FormBuilder,
+        private supplyLinkService: SupplyLinkService
+    ) { }
 
-  ngOnInit(): void {
-    this.productForm = this.fb.group({
-      productId: ['', Validators.required],
-      warehouseId: ['', [Validators.required, Validators.min(1)]],
-      productName: ['', Validators.required],
-      productDescription: [''],
-      quantity: ['', [Validators.required, Validators.min(0)]],
-      price: ['', [Validators.required, Validators.min(1)]]
-    });
-  }
-
-  // convenience getter for easy access in template
-  get f() {
-    return this.productForm.controls;
-  }
-
-  onSubmit(): void {
-    this.submitted = true;
-
-    if (this.productForm.invalid) {
-      return;
+    ngOnInit() {
+        this.userId = Number(localStorage.getItem("user_id"));
+        this.productForm = this.formBuilder.group({
+            warehouse: ["", Validators.required],
+            productDescription: ["", Validators.required],
+            productName: [null, Validators.required],
+            quantity: [null, [Validators.required, Validators.min(0)]],
+            price: [null, [Validators.required, Validators.min(1)]],
+        });
+        this.warehouses = this.supplyLinkService.getWarehousesBySupplier(this.userId);
     }
 
-    // Create a Product instance from form values
-    const product: Product = {
-      productId: this.productForm.value.productId,
-      warehouseId: this.productForm.value.warehouseId,
-      productName: this.productForm.value.productName,
-      productDescription: this.productForm.value.productDescription,
-      quantity: this.productForm.value.quantity,
-      price: this.productForm.value.price
-    };
+    onSubmit() {
+        this.isFormSubmitted = true;
+        this.productSuccess = of('');
+        this.productError = of('');
 
-    // Placeholder for further processing (e.g., API call, service integration)
-    console.log('Product submitted:', product);
-
-    // Reset form after successful submission
-    this.productForm.reset();
-    this.submitted = false;
-  }
+        if (this.productForm.invalid) {
+            return;
+        }
+        this.supplyLinkService.addProduct(this.productForm.value).subscribe({
+            next: (response) => {
+                this.productSuccess = of("Product created successfully");
+                this.productForm.reset();
+                this.isFormSubmitted = false;
+            },
+            error: (error) => this.productError = of("Unable to create product")
+        });
+    }
 }
