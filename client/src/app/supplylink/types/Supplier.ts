@@ -1,15 +1,15 @@
 export class Supplier {
-  supplierId: number;
+  supplierId: number | undefined;
   supplierName: string;
   email: string;
   phone: string;
   address: string;
   username: string;
   password: string;
-  role?: string; // optional
+  role?: string;
 
   constructor(
-    supplierId: number,
+    supplierId: number | undefined,
     supplierName: string,
     email: string,
     phone: string,
@@ -28,9 +28,10 @@ export class Supplier {
     this.role = role;
   }
 
-  displayInfo(): void {
-    console.log(`Supplier ID: ${this.supplierId}`);
-    console.log(`Supplier name: ${this.supplierName}`);
-    console.log(`email: ${this.email}`);
-  }
+  // displayInfo() {
+  //   // Each log must be ONE formatted string with exact labels/casing
+  //   console.log(`Supplier ID: ${this.supplierId}`);
+  //   console.log(`Supplier name: ${this.supplierName}`);
+  //   console.log(`email: ${this.email}`);
+  // }
 }

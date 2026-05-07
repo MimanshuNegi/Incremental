@@ -79,10 +79,7 @@ export class SupplierEditComponent implements OnInit {
                 address: this.supplierForm.value.address,
                 username: this.supplierForm.value.username,
                 password: this.supplierForm.value.password,
-                role: this.supplierForm.value.role,
-                displayInfo: function (): void {
-                    throw new Error('Function not implemented.');
-                }
+                role: this.supplierForm.value.role
             };
             this.supplyLinkService.editSupplier(updatedSupplier).subscribe({
                 next: (response) => {
@@ -106,4 +103,5 @@ export class SupplierEditComponent implements OnInit {
             this.successMessage = null;
         }
     }
+
 }
