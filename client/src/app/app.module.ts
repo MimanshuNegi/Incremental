@@ -2,12 +2,12 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppComponent } from './app.component';
-import { AppRoutingModule } from './app-routing.module';  
+import { AppRoutingModule } from './app-routing.module';
 import { AuthInterceptor } from './auth.interceptors';
-
+import { ProductComponent } from './supplylink/components/product/product.component';
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
@@ -23,4 +23,4 @@ import { AuthInterceptor } from './auth.interceptors';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

@@ -10,12 +10,12 @@ import { Warehouse } from '../../types/Warehouse';
 })
 export class WarehouseSampleComponent {
   
-warehouse = new Warehouse(
-    1,          // Warehouse ID
-    '12',       // Supplier ID
-    'Central Store',  // Warehouse Name
-    'Hyderabad',      // Location
-    1000       // Capacity
-  );
+// warehouse = new Warehouse(
+//     1,          // Warehouse ID
+//     '12',       // Supplier ID
+//     'Central Store',  // Warehouse Name
+//     'Hyderabad',      // Location
+//     1000       // Capacity
+//   );
 
 }

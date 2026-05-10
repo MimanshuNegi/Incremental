@@ -16,7 +16,12 @@ import com.edutech.progressive.service.WarehouseService;
 @Service
 public class WarehouseServiceImplJpa implements WarehouseService {
 
-    private WarehouseRepository warehouseRepository;    
+
+    
+    private WarehouseRepository warehouseRepository;
+    
+
+    
     
     @Autowired
     public WarehouseServiceImplJpa(WarehouseRepository warehouseRepository) {

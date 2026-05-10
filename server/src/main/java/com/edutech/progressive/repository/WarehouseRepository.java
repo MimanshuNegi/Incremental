@@ -13,17 +13,17 @@ import org.springframework.stereotype.Repository;
 import com.edutech.progressive.entity.Warehouse;
 
 @Repository
-public interface WarehouseRepository extends JpaRepository<Warehouse, Integer>{
+public interface WarehouseRepository extends JpaRepository<Warehouse, Integer> {
 
     @Query("select w from Warehouse w where w.warehouseId = :warehouseId")
     Warehouse findByWarehouseId(@Param("warehouseId") int warehouseId);
-    
+
     @Query("select w from Warehouse w where w.supplier.supplierId = :supplierId")
-    List<Warehouse> findAllBySupplier_SupplierId(@Param("supplierId")int supplierId);
+    List<Warehouse> findAllBySupplier_SupplierId(@Param("supplierId") int supplierId);
 
     @Modifying
     @Transactional
     @Query("delete from Warehouse w where w.supplier.supplierId = :supplierId")
-    void deleteBySupplierId(@Param("supplierId")int supplierId);
+    void deleteBySupplierId(@Param("supplierId") int supplierId);
 
 }

@@ -10,25 +10,24 @@ import { AuthService } from "./auth/services/auth.service";
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private authService: AuthService) { }
-  intercept(
-    request: HttpRequest<any>,
-    next: HttpHandler
-  ): Observable<HttpEvent<any>> {
+
+  constructor(private authService: AuthService) {}
+
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
     const token = this.authService.getToken();
+    console.log("TOKEN:", token); // ✅ debug
 
-    if (request.url.includes("login") || request.url.includes("add-user")) {
+    // ✅ Correct public endpoints
+    if (request.url.includes("/user/login") || request.url.includes("/user/register")) {
       return next.handle(request);
     }
 
     if (token) {
       request = request.clone({
         setHeaders: {
-          "Content-Type": "application/json; charset=utf-8",
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+          Authorization: `Bearer ${token}`
+        }
       });
     }
 

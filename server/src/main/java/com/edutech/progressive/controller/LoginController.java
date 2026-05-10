@@ -1,78 +1,166 @@
 package com.edutech.progressive.controller;
 
 import com.edutech.progressive.dto.LoginRequest;
+import com.edutech.progressive.dto.LoginResponse;
 import com.edutech.progressive.entity.Supplier;
 import com.edutech.progressive.jwt.JwtUtil;
-import com.edutech.progressive.repository.SupplierRepository;
 import com.edutech.progressive.service.LoginService;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/user")
 public class LoginController {
-
     private final LoginService loginService;
+
     private final AuthenticationManager authenticationManager;
+
     private final JwtUtil jwtUtil;
-    private final UserDetailsService userDetailsService;
-    private final SupplierRepository supplierRepository;
 
     @Autowired
-    public LoginController(LoginService loginService,
-                           AuthenticationManager authenticationManager,
-                           JwtUtil jwtUtil,
-                           UserDetailsService userDetailsService,
-                           SupplierRepository supplierRepository) {
+    public LoginController(LoginService loginService, JwtUtil jwtUtil, AuthenticationManager authenticationManager) {
         this.loginService = loginService;
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
-        this.userDetailsService = userDetailsService;
-        this.supplierRepository = supplierRepository;
     }
 
-    // POST /user/register
     @PostMapping("/register")
     public ResponseEntity<Supplier> registerUser(@RequestBody Supplier user) {
-        try {
-            Supplier created = loginService.createUser(user);
-            return ResponseEntity.ok(created);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        return ResponseEntity.ok(loginService.createUser(user));
     }
 
-    // POST /user/login
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity loginUser(@RequestBody LoginRequest loginRequest) {
         try {
+
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
-            );
-
-            UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getUsername());
-            Supplier supplier = supplierRepository.findByUsername(loginRequest.getUsername());
-
-            String token = jwtUtil.generateToken(userDetails.getUsername());
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("token", token);
-            response.put("role", supplier.getRole());
-            response.put("userId", supplier.getSupplierId());
-
-            return ResponseEntity.ok(response);
-
+                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         } catch (AuthenticationException e) {
-            return ResponseEntity.status(401).body("Unauthorized: Invalid credentials");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid username or password", e);
         }
+        final UserDetails userDetails = loginService.loadUserByUsername(loginRequest.getUsername());
+        Supplier foundUser = loginService.getSupplierByName(loginRequest.getUsername());
+        final String token = jwtUtil.generateToken(loginRequest.getUsername());
+        String role = foundUser.getRole();
+        Integer userId = foundUser.getSupplierId();
+        System.out.println("User Roles: " + role);
+        return ResponseEntity.ok(new LoginResponse(token, role, userId));
     }
 }
+
+// @RestController
+// @RequestMapping("/user")
+// public class LoginController {
+// private final LoginService loginService;
+
+// private final AuthenticationManager authenticationManager;
+
+// private final JwtUtil jwtUtil;
+
+// @Autowired
+// public LoginController(LoginService loginService, JwtUtil jwtUtil,
+// AuthenticationManager authenticationManager) {
+// this.loginService = loginService;
+// this.authenticationManager = authenticationManager;
+// this.jwtUtil = jwtUtil;
+// }
+
+// @PostMapping("/register")
+// public ResponseEntity<Supplier> registerUser(@RequestBody Supplier user) {
+// return ResponseEntity.ok(loginService.createUser(user));
+// }
+
+// @PostMapping("/login")
+// public ResponseEntity loginUser(@RequestBody LoginRequest loginRequest) {
+// try {
+
+// authenticationManager.authenticate(
+// new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
+// loginRequest.getPassword())
+// );
+// } catch (AuthenticationException e) {
+// throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid username
+// or password", e);
+// }
+// final UserDetails userDetails =
+// loginService.loadUserByUsername(loginRequest.getUsername());
+// Supplier foundUser =
+// loginService.getSupplierByName(loginRequest.getUsername());
+// final String token = jwtUtil.generateToken(loginRequest.getUsername());
+// String role = foundUser.getRole();
+// Integer userId = foundUser.getSupplierId();
+// System.out.println("User Roles: " + role);
+// return ResponseEntity.ok(new LoginResponse(token, role, userId));
+// }
+// }
+
+// package com.edutech.progressive.controller;
+
+// import com.edutech.progressive.dto.LoginRequest;
+// import com.edutech.progressive.dto.LoginResponse;
+// import com.edutech.progressive.entity.Supplier;
+// import com.edutech.progressive.service.LoginService;
+
+// import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.http.HttpStatus;
+// import org.springframework.http.ResponseEntity;
+// import org.springframework.web.bind.annotation.*;
+
+// @RestController
+// @RequestMapping("/user")
+// public class LoginController {
+
+// private final LoginService loginService;
+
+// @Autowired
+// public LoginController(LoginService loginService) {
+// this.loginService = loginService;
+// }
+
+// @PostMapping("/register")
+// public ResponseEntity<Supplier> registerUser(@RequestBody Supplier user) {
+// return ResponseEntity.ok(loginService.createUser(user));
+// }
+
+// @PostMapping("/login")
+// public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest) {
+
+// // ✅ Fetch user directly (NO Spring Security)
+// Supplier foundUser =
+// loginService.getSupplierByName(loginRequest.getUsername());
+
+// if (foundUser == null) {
+// return ResponseEntity
+// .status(HttpStatus.UNAUTHORIZED)
+// .body("Invalid username or password");
+// }
+
+// // ✅ Plain password check (TEMPORARY, no security)
+// if (!foundUser.getPassword().equals(loginRequest.getPassword())) {
+// return ResponseEntity
+// .status(HttpStatus.UNAUTHORIZED)
+// .body("Invalid username or password");
+// }
+
+// // ✅ Successful login (NO JWT)
+// LoginResponse response = new LoginResponse(
+// null, // token removed
+// foundUser.getRole(),
+// foundUser.getSupplierId()
+// );
+
+// return ResponseEntity.ok(response);
+// }
+// }

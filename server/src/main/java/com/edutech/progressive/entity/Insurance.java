@@ -6,22 +6,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 @Entity
 public class Insurance {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private int insuranceId;
-    
-    @OneToOne
-    @JoinColumn(name = "shipment_id")
+    @ManyToOne()
+    @JoinColumn(name = "shipmentId")
     private Shipment shipment;
-
     private String insuranceProvider;
-
     private Long insuranceCoverageAmount;
 
     public Insurance() {
@@ -29,6 +25,12 @@ public class Insurance {
 
     public Insurance(int insuranceId, Shipment shipment, String insuranceProvider, Long insuranceCoverageAmount) {
         this.insuranceId = insuranceId;
+        this.shipment = shipment;
+        this.insuranceProvider = insuranceProvider;
+        this.insuranceCoverageAmount = insuranceCoverageAmount;
+    }
+
+    public Insurance(Shipment shipment, String insuranceProvider, Long insuranceCoverageAmount) {
         this.shipment = shipment;
         this.insuranceProvider = insuranceProvider;
         this.insuranceCoverageAmount = insuranceCoverageAmount;

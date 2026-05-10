@@ -11,10 +11,21 @@ import com.edutech.progressive.repository.InsuranceRepository;
 import com.edutech.progressive.service.InsuranceService;
 
 @Service
-public class InsuranceServiceImpl  implements InsuranceService{
+public class InsuranceServiceImpl implements InsuranceService {
 
     @Autowired
-    private InsuranceRepository insuranceRepository;
+    InsuranceRepository insuranceRepository;
+
+    @Override
+    public int addInsurance(Insurance insurance) throws SQLException {
+        return insuranceRepository.save(insurance).getInsuranceId();
+
+    }
+
+    @Override
+    public void deleteInsurance(int insuranceId) throws SQLException {
+        insuranceRepository.deleteById(insuranceId);
+    }
 
     @Override
     public List<Insurance> getAllInsurances() throws SQLException {
@@ -22,24 +33,13 @@ public class InsuranceServiceImpl  implements InsuranceService{
     }
 
     @Override
-    public int addInsurance(Insurance insurance) throws SQLException{
-        Insurance savedInsurance = insuranceRepository.save(insurance);
-        return savedInsurance.getInsuranceId();
-    }
-
-    @Override
-    public Insurance getInsuranceById(int insuranceId) throws SQLException{
+    public Insurance getInsuranceById(int insuranceId) throws SQLException {
         return insuranceRepository.findByInsuranceId(insuranceId);
     }
 
     @Override
-    public void updateInsurance(Insurance insurance) throws SQLException{
+    public void updateInsurance(Insurance insurance) throws SQLException {
         insuranceRepository.save(insurance);
-    }
-
-    @Override
-    public void deleteInsurance(int insuranceId) {
-        insuranceRepository.deleteById(insuranceId);
     }
 
 }

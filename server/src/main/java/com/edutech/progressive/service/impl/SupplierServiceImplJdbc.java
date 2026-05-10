@@ -1,55 +1,80 @@
 package com.edutech.progressive.service.impl;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import org.springframework.stereotype.Service;
 
 import com.edutech.progressive.dao.SupplierDAO;
 import com.edutech.progressive.entity.Supplier;
 import com.edutech.progressive.service.SupplierService;
 
-@Service
 public class SupplierServiceImplJdbc implements SupplierService {
-    private final SupplierDAO supplierDAO;
+    private SupplierDAO supplierDAO;
 
-    public SupplierServiceImplJdbc() {
-        this.supplierDAO = null;
+    public SupplierServiceImplJdbc(SupplierDAO supplierDAO) {
+        this.supplierDAO = supplierDAO;
     }
 
     @Override
-    public List<Supplier> getAllSuppliers()throws SQLException {
+    public List<Supplier> getAllSuppliers() throws SQLException {
         return supplierDAO.getAllSuppliers();
     }
 
     @Override
-    public int addSupplier(Supplier supplier)throws SQLException {
-        return supplierDAO.addSupplier(supplier);
+    public int addSupplier(Supplier supplier) throws SQLException {
+        try {
+            return supplierDAO.addSupplier(supplier);
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+
+        }
     }
 
     @Override
-    public List<Supplier> getAllSuppliersSortedByName()throws SQLException {
-        List<Supplier> suppliers = supplierDAO.getAllSuppliers();
-        Collections.sort(suppliers, Comparator.comparing(Supplier::getSupplierName));
-        return suppliers;
+    public List<Supplier> getAllSuppliersSortedByName() throws SQLException {
+        try {
+            List<Supplier> sortSuppliers = supplierDAO.getAllSuppliers();
+            Collections.sort(sortSuppliers, Comparator.comparing(Supplier::getSupplierName));
+            return sortSuppliers;
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+
+        }
     }
 
     @Override
-    public void updateSupplier(Supplier supplier) throws SQLException{
-        supplierDAO.updateSupplier(supplier);
+    public void updateSupplier(Supplier supplier) throws SQLException {
+        try {
+            supplierDAO.updateSupplier(supplier);
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+
+        }
     }
 
     @Override
-    public void deleteSupplier(int supplierId)throws SQLException {
-        supplierDAO.deleteSupplier(supplierId);
+    public void deleteSupplier(int supplierId) throws SQLException {
+        try {
+            supplierDAO.deleteSupplier(supplierId);
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+        }
     }
 
     @Override
-    public Supplier getSupplierById(int supplierId) throws SQLException{
-        return supplierDAO.getSupplierById(supplierId);
+    public Supplier getSupplierById(int supplierId) throws SQLException {
+        try {
+            return supplierDAO.getSupplierById(supplierId);
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+
+        }
     }
 
 }

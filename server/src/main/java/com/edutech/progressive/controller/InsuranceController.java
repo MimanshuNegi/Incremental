@@ -1,9 +1,10 @@
 package com.edutech.progressive.controller;
 
 import com.edutech.progressive.entity.Insurance;
-import com.edutech.progressive.service.InsuranceService;
+import com.edutech.progressive.service.impl.InsuranceServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,65 +21,62 @@ import java.util.List;
 @RestController
 @RequestMapping("/insurance")
 public class InsuranceController {
-
     @Autowired
-    private InsuranceService insuranceService;
+    InsuranceServiceImpl insuranceService;
 
     @GetMapping
     public ResponseEntity<List<Insurance>> getAllInsurances() {
         try {
-            return ResponseEntity.ok(insuranceService.getAllInsurances());
+            List<Insurance> insuranceList = insuranceService.getAllInsurances();
+            return new ResponseEntity<>(insuranceList, HttpStatus.OK);
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            return ResponseEntity.status(500).build();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        
+
     }
-    
+
     @GetMapping("/{insuranceId}")
     public ResponseEntity<Insurance> getInsuranceById(@PathVariable int insuranceId) {
         try {
             Insurance insurance = insuranceService.getInsuranceById(insuranceId);
-            if(insurance == null){
-            return ResponseEntity.status(404).build();
-        }
-        return ResponseEntity.ok(insurance);
+            if (insurance != null) {
+                return new ResponseEntity<>(insurance, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            return ResponseEntity.status(500).build();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        
-        
     }
-    
+
     @PostMapping
     public ResponseEntity<Integer> createInsurance(@RequestBody Insurance insurance) {
         try {
-            return ResponseEntity.status(201).body(insuranceService.addInsurance(insurance));
+            int insuranceId = insuranceService.addInsurance(insurance);
+            return new ResponseEntity<>(insuranceId, HttpStatus.CREATED);
         } catch (SQLException e) {
-            return ResponseEntity.status(500).build();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    
+
     @PutMapping("/{insuranceId}")
     public ResponseEntity<Void> updateInsurance(@PathVariable int insuranceId, @RequestBody Insurance insurance) {
         try {
+            insurance.setInsuranceId(insuranceId);
             insuranceService.updateInsurance(insurance);
-            return ResponseEntity.status(204).build();
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (SQLException e) {
-            return ResponseEntity.status(500).build();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        
-        
     }
-    
+
     @DeleteMapping("/{insuranceId}")
     public ResponseEntity<Void> deleteInsurance(@PathVariable int insuranceId) {
         try {
             insuranceService.deleteInsurance(insuranceId);
-            return ResponseEntity.ok().build();
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (SQLException e) {
-            return ResponseEntity.status(500).build();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
