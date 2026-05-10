@@ -124,6 +124,7 @@ public class SupplierDAOImpl implements SupplierDAO {
                 suppliers.add(new Supplier(supplierId, supplierName, email, phone, username, password, address, role));
             }
         }
+
         return suppliers;
     }
 }

@@ -1,5 +1,5 @@
 <div class="team-form-container">
-    <form (ngSubmit)="onSubmit()" [formGroup]="supplierForm" class="user-form">
+    <form *ngIf="supplierForm" (ngSubmit)="onSubmit()" [formGroup]="supplierForm" class="user-form">
         <h2>Update Supplier</h2>
         <div class="form-group">
             <label for="supplierName">Supplier Name:</label>

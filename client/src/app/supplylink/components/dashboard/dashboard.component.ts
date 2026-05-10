@@ -72,7 +72,9 @@ export class DashboardComponent implements OnInit {
     }
 
     editSupplier(supplier: Supplier): void {
-        this.router.navigate(['/supplylink/supplier/edit', { supplierId: supplier.supplierId, name: supplier.supplierName, email: supplier.email, username: supplier.username, password: supplier.password, role: supplier.role }]);
+        this.router.navigate(['/supplylink/supplier/edit', {
+            supplierId: supplier.supplierId, name: supplier.supplierName, email: supplier.email, username: supplier.username, password: supplier.password, role: supplier.role, phone: supplier.phone, address: supplier.address
+        }]);
 
     }
 
@@ -168,25 +170,25 @@ export class DashboardComponent implements OnInit {
     }
 
     onProductFormSubmit(): void {
-  if (this.productForm.valid && this.currentProduct) {
-    const updatedProduct: Product = {
-      productId: this.currentProduct.productId,
-      warehouse: this.currentProduct.warehouse, // ✅ REQUIRED
-      productName: this.productForm.value.productName,
-      productDescription: this.productForm.value.productDescription,
-      quantity: this.productForm.value.quantity,
-      price: this.productForm.value.price
-    };
+        if (this.productForm.valid && this.currentProduct) {
+            const updatedProduct: Product = {
+                productId: this.currentProduct.productId,
+                warehouse: this.currentProduct.warehouse, // ✅ REQUIRED
+                productName: this.productForm.value.productName,
+                productDescription: this.productForm.value.productDescription,
+                quantity: this.productForm.value.quantity,
+                price: this.productForm.value.price
+            };
 
-    this.supplyLinkService.editProduct(updatedProduct).subscribe({
-      next: () => {
-        this.loadProductsForWarehouse(this.selectedWarehouseId!);
-        this.closeProductPopup();
-      },
-      error: (error) => console.error('Error updating product:', error)
-    });
-  }
-}
+            this.supplyLinkService.editProduct(updatedProduct).subscribe({
+                next: () => {
+                    this.loadProductsForWarehouse(this.selectedWarehouseId!);
+                    this.closeProductPopup();
+                },
+                error: (error) => console.error('Error updating product:', error)
+            });
+        }
+    }
 
     deleteProduct(product: Product): void {
         if (confirm('Are you sure you want to delete this product?')) {
@@ -206,7 +208,7 @@ export class DashboardComponent implements OnInit {
     addProductToWarehouse(newProduct: Product, warehouseId: number): void {
         this.supplyLinkService.getWarehouseById(warehouseId).subscribe({
             next: (warehouse) => {
-              //  newProduct.warehouse = warehouse;
+                //  newProduct.warehouse = warehouse;
                 this.supplyLinkService.addProduct(newProduct).subscribe({
                     next: (addedProduct) => {
                         this.loadProductsForWarehouse(warehouseId);

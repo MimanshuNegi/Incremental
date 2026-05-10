@@ -21,6 +21,7 @@ public class WarehouseServiceImplJdbc implements WarehouseService  {
         try {
             return warehouseDAO.getAllWarehouse();
         } catch (SQLException e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return null;
@@ -31,6 +32,7 @@ public class WarehouseServiceImplJdbc implements WarehouseService  {
         try {
             return warehouseDAO.addWarehouse(warehouse);
         } catch (SQLException e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return -1;
@@ -44,6 +46,7 @@ public class WarehouseServiceImplJdbc implements WarehouseService  {
             Collections.sort(sortWarehouses, Comparator.comparing(Warehouse::getCapacity));
         return sortWarehouses;
         } catch (SQLException e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return null;
@@ -54,6 +57,7 @@ public class WarehouseServiceImplJdbc implements WarehouseService  {
         try {
             warehouseDAO.updateWarehouse(warehouse);
         } catch (SQLException e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -63,6 +67,7 @@ public class WarehouseServiceImplJdbc implements WarehouseService  {
         try {
             warehouseDAO.deleteWarehouse(warehouseId);
         } catch (SQLException e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -72,6 +77,7 @@ public class WarehouseServiceImplJdbc implements WarehouseService  {
         try {
             return warehouseDAO.getWarehouseById(warehouseId);
         } catch (SQLException e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return null;

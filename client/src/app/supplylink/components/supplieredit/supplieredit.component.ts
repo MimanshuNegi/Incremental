@@ -32,7 +32,6 @@ export class SupplierEditComponent implements OnInit {
             phone: [""],
             address: [""],
             username: ["", [Validators.required, this.noSpecialCharacters]],
-            password: ["", [Validators.required, Validators.minLength(8)]],
             role: ["", [Validators.required]]
         });
         this.route.params.subscribe(params => {
@@ -71,33 +70,39 @@ export class SupplierEditComponent implements OnInit {
 
     onSubmit(): void {
         if (this.supplierForm.valid) {
+
+            const formData = this.supplierForm.getRawValue();
+
             const updatedSupplier: Supplier = {
                 supplierId: this.supplierId,
-                supplierName: this.supplierForm.value.supplierName,
+                supplierName: formData.supplierName,
                 email: this.supplier!.email ?? "",
-                phone: this.supplierForm.value.phone,
-                address: this.supplierForm.value.address,
-                username: this.supplierForm.value.username,
-                password: this.supplierForm.value.password,
-                role: this.supplierForm.value.role
+                phone: formData.phone,
+                address: formData.address,
+                username: formData.username,
+                password: formData.password,
+                role: formData.role
             };
+
+            console.log("Sending Supplier:", updatedSupplier);
+
             this.supplyLinkService.editSupplier(updatedSupplier).subscribe({
                 next: (response) => {
-                    this.supplier = response;
                     this.successMessage = 'Supplier updated successfully';
                     this.errorMessage = null;
+
                     this.router.navigate(['/supplylink']);
                 },
                 error: (error) => {
                     if (error.status === 400) {
                         this.errorMessage = error.error;
-                    }
-                    else {
+                    } else {
                         this.errorMessage = 'Please check the entered data.';
                     }
                     console.log(error);
                 }
             });
+
         } else {
             this.errorMessage = 'Please fill out all required fields correctly.';
             this.successMessage = null;

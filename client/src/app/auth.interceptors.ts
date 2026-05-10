@@ -16,9 +16,7 @@ export class AuthInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
     const token = this.authService.getToken();
-    console.log("TOKEN:", token); // ✅ debug
 
-    // ✅ Correct public endpoints
     if (request.url.includes("/user/login") || request.url.includes("/user/register")) {
       return next.handle(request);
     }

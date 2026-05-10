@@ -2,9 +2,9 @@ package com.edutech.progressive.service.impl;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.edutech.progressive.entity.Supplier;
@@ -15,6 +15,9 @@ import com.edutech.progressive.service.SupplierService;
 
 @Service
 public class SupplierServiceImplJpa implements SupplierService {
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     private SupplierRepository supplierRepository;
 
@@ -28,50 +31,71 @@ public class SupplierServiceImplJpa implements SupplierService {
     }
 
     public int addSupplier(Supplier supplier) {
+
         if (supplierRepository.findByUsername(supplier.getUsername()) != null) {
-            throw new SupplierAlreadyExistsException("Supplier already exists");
+            throw new SupplierAlreadyExistsException("Username already exists");
         }
+
         if (supplierRepository.findByEmail(supplier.getEmail()) != null) {
-            throw new SupplierAlreadyExistsException("Supplier already exists");
+            throw new SupplierAlreadyExistsException("Email already exists");
         }
-        Supplier savedSupplier = supplierRepository.save(supplier);
-        return savedSupplier.getSupplierId();
+
+        Supplier saved = supplierRepository.save(supplier);
+        return saved.getSupplierId();
     }
 
     public List<Supplier> getAllSuppliersSortedByName() {
-        List<Supplier> result = supplierRepository.findAll();
-        Collections.sort(result);
-        return result;
+        List<Supplier> list = supplierRepository.findAll();
+        Collections.sort(list);
+        return list;
     }
 
     public void updateSupplier(int supplierId, Supplier supplier) {
-        if (supplierRepository.findByUsername(supplier.getUsername()) != null) {
-            throw new SupplierAlreadyExistsException("Supplier Already exists");
-        }
-        Supplier updatedSupplier = supplierRepository.findBySupplierId(supplierId);
-        if (updatedSupplier != null) {
 
-            updatedSupplier.setSupplierName(supplier.getSupplierName());
-            updatedSupplier.setEmail(supplier.getEmail());
-            updatedSupplier.setPhone(supplier.getPhone());
-            updatedSupplier.setAddress(supplier.getAddress());
-            updatedSupplier.setUsername(supplier.getUsername());
-            updatedSupplier.setPassword(supplier.getPassword());
-            updatedSupplier.setRole(supplier.getRole());
-            supplierRepository.save(supplier);
+        Supplier existing = supplierRepository.findBySupplierId(supplierId);
+
+        if (existing == null) {
+            throw new SupplierDoesNotExistException("Supplier not found");
         }
+
+        Supplier userByUsername = supplierRepository.findByUsername(supplier.getUsername());
+        if (userByUsername != null && userByUsername.getSupplierId() != supplierId) {
+            throw new SupplierAlreadyExistsException("Username already exists");
+        }
+
+        Supplier userByEmail = supplierRepository.findByEmail(supplier.getEmail());
+        if (userByEmail != null && userByEmail.getSupplierId() != supplierId) {
+            throw new SupplierAlreadyExistsException("Email already exists");
+        }
+
+        existing.setSupplierName(supplier.getSupplierName());
+        existing.setEmail(supplier.getEmail());
+        existing.setPhone(supplier.getPhone());
+        existing.setAddress(supplier.getAddress());
+        existing.setUsername(supplier.getUsername());
+        existing.setRole(supplier.getRole());
+
+        if (supplier.getPassword() != null && !supplier.getPassword().isEmpty()) {
+
+            if (!supplier.getPassword().startsWith("$2a")) {
+                existing.setPassword(passwordEncoder.encode(supplier.getPassword()));
+            }
+        }
+        supplierRepository.save(existing);
 
     }
 
     public void deleteSupplier(int supplierId) {
+        if (!supplierRepository.existsById(supplierId)) {
+            throw new SupplierDoesNotExistException("Supplier not found");
+        }
         supplierRepository.deleteById(supplierId);
     }
 
     public Supplier getSupplierById(int supplierId) {
         if (!supplierRepository.existsById(supplierId)) {
-            throw new SupplierDoesNotExistException("Supplier does not exist");
+            throw new SupplierDoesNotExistException("Supplier not found");
         }
         return supplierRepository.findBySupplierId(supplierId);
     }
-
 }

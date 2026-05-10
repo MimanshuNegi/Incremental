@@ -60,7 +60,7 @@ public class SupplierController {
     public ResponseEntity<?> updateSupplier(@PathVariable int supplierId, @RequestBody Supplier supplier) {
         try {
             supplier.setSupplierId(supplierId);
-            supplierServiceImplJpa.updateSupplier(supplier);
+            supplierServiceImplJpa.updateSupplier(supplierId, supplier);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (SupplierAlreadyExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

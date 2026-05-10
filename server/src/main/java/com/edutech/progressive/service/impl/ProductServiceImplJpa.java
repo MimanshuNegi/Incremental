@@ -52,5 +52,5 @@ public class ProductServiceImplJpa implements ProductService {
     public List<Product> getAllProductByWarehouse(int warehouseId) throws SQLException{
         return productRepository.findAllByWarehouse_WarehouseId(warehouseId);
     }
-
+    
 }
